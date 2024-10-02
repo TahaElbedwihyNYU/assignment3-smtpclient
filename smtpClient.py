@@ -44,15 +44,24 @@ def smtp_client(port=1025, mailserver='127.0.0.1'):
 
     # Send DATA command and handle server response.
     # Fill in start
-    data = "DATA"
+    data = "DATA\r\n"
     clientSocket.send(data.encode())
     recv4 = clientSocket.recv(1024).decode()
-    if recv4[:3] == 354:
-
+    print(recv4)
 
     # Fill in end
 
     # Send message data.
+    message = "Subject: This is URGENT!\r\n" \
+              "I am writing to you to speak on your car's extended warranty.\r\n" \
+              ".\r\n"  # Ending with a dot
+    print(recv4[:3])
+    if recv4[:3] == "354":
+        clientSocket.send(message.encode())
+
+    recv5 = clientSocket.recv(1024).decode()
+    print(recv5[-1])
+
     # Fill in start
     # Fill in end
 
@@ -62,6 +71,11 @@ def smtp_client(port=1025, mailserver='127.0.0.1'):
 
     # Send QUIT command and handle server response.
     # Fill in start
+    quit = "QUIT"
+    if recv5[-1] == ".":
+        clientSocket.send(quit.encode())
+
+    recv6 = clientSocket.recv(1024).decode()
     # Fill in end
 
 
